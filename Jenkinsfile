@@ -55,6 +55,11 @@ pipeline {
                     }
                     sh 'git add .'
                     sh 'git commit -m "Update deployment file to use version v${BUILD_NUMBER}"'
+                    def currentBranch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                    if (currentBranch != "test") {
+                        echo "Current branch is ${currentBranch}. Switching to branch 'test'."
+                        sh 'git checkout test' // Chuyển sang nhánh test
+                    }
                     withCredentials([usernamePassword(credentialsId: 'login-and-push-from-jenkins', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')]) {
                         sh 'git push https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/CallMeNaul/test.git test'}
                     
