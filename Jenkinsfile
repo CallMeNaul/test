@@ -24,6 +24,37 @@ pipeline {
                 git branch: "main", url: "${sourceCode}"
             }
         }
+        stage('Setup Git Configuration') {
+            steps {
+                script {
+                    def email = "luanyou952003@gmail.com" // Thay đổi thành email của bạn
+                    def username = "CallMeNaul" // Thay đổi thành username của bạn
+                    def configuredEmail = sh(script: "git config --get user.email", returnStdout: true).trim()
+                    if (configuredEmail != email) {
+                        echo "Configuring user.email to ${email}"
+                        sh "git config user.email '${email}'"
+                    }
+                    
+                    def configuredUsername = sh(script: "git config --get user.name", returnStdout: true).trim()
+                    if (configuredUsername != username) {
+                        echo "Configuring user.name to ${username}"
+                        sh "git config user.name '${username}'"
+                    }
+
+                    def remoteUrl = sh(script: "git remote get-url origin", returnStdout: true).trim()
+                    if (remoteUrl != "https://github.com/CallMeNaul/test.git") {
+                        echo "Remote URL is ${remoteUrl}. Adding the correct remote."
+                        sh "git remote remove origin" // Xóa remote cũ (nếu cần thiết)
+                        sh "git remote add origin https://github.com/CallMeNaul/test.git" // Thêm remote mới
+                    }
+                    def currentBranch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                    if (currentBranch != "test") {
+                        echo "Current branch is ${currentBranch}. Switching to branch 'test'."
+                        sh 'git checkout test' // Chuyển sang nhánh test
+                    }
+                }
+            }
+        }
         stage('Update Deployment File') {
             steps {
                 script {
@@ -38,20 +69,6 @@ pipeline {
         stage('Commit Changes') {
             steps {
                 script {
-                    sh 'git config user.email "luanyou952003@gmail.com"' // Thay đổi thành email của bạn
-                    sh 'git config user.name "CallMeNaul"' // Thay đổi thành username của bạn
-
-                    def remoteUrl = sh(script: "git remote get-url origin", returnStdout: true).trim()
-                    if (remoteUrl != "https://github.com/CallMeNaul/test.git") {
-                        echo "Remote URL is ${remoteUrl}. Adding the correct remote."
-                        sh "git remote remove origin" // Xóa remote cũ (nếu cần thiết)
-                        sh "git remote add origin https://github.com/CallMeNaul/test.git" // Thêm remote mới
-                    }
-                    def currentBranch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
-                    if (currentBranch != "test") {
-                        echo "Current branch is ${currentBranch}. Switching to branch 'test'."
-                        sh 'git checkout test' // Chuyển sang nhánh test
-                    }
                     sh 'git add .'
                     sh 'git commit -m "Update deployment file to use version v${BUILD_NUMBER}"'
                     withCredentials([usernamePassword(credentialsId: 'login-and-push-from-jenkins', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')]) {
