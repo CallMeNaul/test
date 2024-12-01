@@ -30,7 +30,7 @@ pipeline {
                     // Đọc nội dung file deployment.yaml
                     def fileContent = readFile("${DEPLOYMENT_FILE}")
                     // Thay thế callmenaul:threaddit-v3:latest bằng callmenaul:threaddit-v{BUILD-NUMBER}:latest
-                    def updatedContent = fileContent.replaceAll(/callmenaul:threaddit-v\d+:(latest)/, "callmenaul:threaddit-v${buildNumber}:latest")
+                    def updatedContent = fileContent.replaceAll('callmenaul:threaddit-v[^:]+:latest', "callmenaul:threaddit-v${buildNumber}:latest")
                     // Ghi nội dung đã cập nhật vào file
                     writeFile file: "${DEPLOYMENT_FILE}", text: updatedContent
                     sh 'cat ${DEPLOYMENT_FILE}'
