@@ -3,9 +3,8 @@ pipeline {
         label 'naul'
     }
     environment {
-        workSpace = "/var/lib/jenkins/workspace/test"
         sourceCode = "https://github.com/CallMeNaul/test.git"
-        DEPLOYMENT_FILE = '${workSpace}/deployment.yaml'
+        DEPLOYMENT_FILE = 'deployment.yaml'
         BRANCH_NAME = 'test'
     }
     stages {
