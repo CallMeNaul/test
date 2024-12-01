@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Checkout') {
             steps {
-                git sourceCode
+                git branch: "main", url: "${sourceCode}"
             }
         }
         stage('Update Deployment File') {
