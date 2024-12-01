@@ -34,17 +34,24 @@ pipeline {
                 }
             }
         }
-        // stage('Commit Changes') {
-        //     steps {
-        //         script {
-        //             sh 'git config user.email "luanyou952003@gmail.com"' // Thay đổi thành email của bạn
-        //             sh 'git config user.name "CallMeNaul"' // Thay đổi thành username của bạn
-        //             sh 'git add .'
-        //             sh 'git commit -m "Update deployment file to use version v${BUILD_NUMBER}"'
-        //             sh 'git push origin ${BRANCH_NAME}' // Thay đổi thành branch bạn muốn push
-        //         }
-        //     }
-        // }
+        stage('Commit Changes') {
+            steps {
+                script {
+                    sh 'git config user.email "luanyou952003@gmail.com"' // Thay đổi thành email của bạn
+                    sh 'git config user.name "CallMeNaul"' // Thay đổi thành username của bạn
+                    def remoteUrl = sh(script: "git remote get-url origin", returnStdout: true).trim()
+
+                    if (remoteUrl != "https://github.com/CallMeNaul/test.git") {
+                        echo "Remote URL is ${remoteUrl}. Adding the correct remote."
+                        sh "git remote remove origin" // Xóa remote cũ (nếu cần thiết)
+                        sh "git remote add origin https://github.com/CallMeNaul/test.git" // Thêm remote mới
+                    }
+                    sh 'git add .'
+                    sh 'git commit -m "Update deployment file to use version v${BUILD_NUMBER}"'
+                    sh 'git push origin ${BRANCH_NAME}' // Thay đổi thành branch bạn muốn push
+                }
+            }
+        }
     }
 
     post {
