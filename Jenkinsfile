@@ -39,8 +39,14 @@ pipeline {
                 script {
                     sh 'git config user.email "luanyou952003@gmail.com"' // Thay đổi thành email của bạn
                     sh 'git config user.name "CallMeNaul"' // Thay đổi thành username của bạn
+                    
+                    def currentBranch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                    if (currentBranch != "test") {
+                        echo "Current branch is ${currentBranch}. Switching to branch 'test'."
+                        sh 'git checkout test' // Chuyển sang nhánh test
+                    }
+                    
                     def remoteUrl = sh(script: "git remote get-url origin", returnStdout: true).trim()
-
                     if (remoteUrl != "https://github.com/CallMeNaul/test.git") {
                         echo "Remote URL is ${remoteUrl}. Adding the correct remote."
                         sh "git remote remove origin" // Xóa remote cũ (nếu cần thiết)
