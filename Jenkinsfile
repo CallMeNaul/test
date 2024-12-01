@@ -41,10 +41,8 @@ pipeline {
                 script {
                     sh 'git config user.email "luanyou952003@gmail.com"' // Thay đổi thành email của bạn
                     sh 'git config user.name "CallMeNaul"' // Thay đổi thành username của bạn
-                    sh 'git remote add origin ${sourceCode}'
                     sh 'git add .'
                     sh 'git commit -m "Update deployment file to use version v${BUILD_NUMBER}"'
-                    
                     sh 'git push origin ${BRANCH_NAME}' // Thay đổi thành branch bạn muốn push
                 }
             }
