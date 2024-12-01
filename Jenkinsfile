@@ -27,6 +27,7 @@ pipeline {
         stage('Update Deployment File') {
             steps {
                 script {
+                    sh 'cat ${DEPLOYMENT_FILE}'
                     def buildNumber = env.BUILD_NUMBER
                     // Thay thế callmenaul:threaddit-v3:latest bằng callmenaul:threaddit-v{BUILD-NUMBER}:latest
                     sh "sed -i 's/callmenaul:threaddit-v[0-9]*:latest/callmenaul:threaddit-v${buildNumber}:latest/g' ${DEPLOYMENT_FILE}"
