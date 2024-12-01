@@ -6,6 +6,9 @@ pipeline {
         sourceCode = "https://github.com/CallMeNaul/test.git"
         DEPLOYMENT_FILE = 'deployment.yaml'
         BRANCH_NAME = 'test'
+        GITHUB_CREDENTIALS = credentials('login-and-push-from-jenkins')
+        GITHUB_TOKEN = "${GITHUB_CREDENTIALS.PASSWORD}"
+        GITHUB_USERNAME = "${GITHUB_CREDENTIALS.USR}"
     }
     stages {
         stage('Info') {
@@ -54,7 +57,8 @@ pipeline {
                     }
                     sh 'git add .'
                     sh 'git commit -m "Update deployment file to use version v${BUILD_NUMBER}"'
-                    sh 'git push origin ${BRANCH_NAME}' // Thay đổi thành branch bạn muốn push
+                    sh 'git push https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/CallMeNaul/test.git test'
+                    //sh 'git push origin ${BRANCH_NAME}' // Thay đổi thành branch bạn muốn push
                 }
             }
         }
