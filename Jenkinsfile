@@ -29,7 +29,7 @@ pipeline {
                     sh 'cat ${DEPLOYMENT_FILE}'
                     def buildNumber = env.BUILD_NUMBER
                     // Thay thế callmenaul:threaddit-v3:latest bằng callmenaul:threaddit-v{BUILD-NUMBER}:latest
-                    sh "sed -i "s/callmenaul\\/threaddit-v[^:]*:latest/callmenaul\\/threaddit-v${BUILD_NUMBER}:latest/g" ${DEPLOYMENT_FILE}"
+                    sh 'sed -i "s/callmenaul\\/threaddit-v[^:]*:latest/callmenaul\\/threaddit-v${BUILD_NUMBER}:latest/g" ${DEPLOYMENT_FILE}'
                     sh 'cat ${DEPLOYMENT_FILE}'
                 }
             }
