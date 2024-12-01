@@ -27,12 +27,8 @@ pipeline {
             steps {
                 script {
                     def buildNumber = env.BUILD_NUMBER
-                    // Đọc nội dung file deployment.yaml
-                    def fileContent = readFile("${DEPLOYMENT_FILE}")
                     // Thay thế callmenaul:threaddit-v3:latest bằng callmenaul:threaddit-v{BUILD-NUMBER}:latest
-                    def updatedContent = fileContent.replaceAll('callmenaul:threaddit-v[^:]+:latest', "callmenaul:threaddit-v${buildNumber}:latest")
-                    // Ghi nội dung đã cập nhật vào file
-                    writeFile file: "${DEPLOYMENT_FILE}", text: updatedContent
+                    sh "sed -i 's/callmenaul:threaddit-v[0-9]*:latest/callmenaul:threaddit-v${buildNumber}:latest/g' ${DEPLOYMENT_FILE}"
                     sh 'cat ${DEPLOYMENT_FILE}'
                 }
             }
