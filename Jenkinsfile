@@ -33,6 +33,7 @@ pipeline {
                     def updatedContent = fileContent.replaceAll(/callmenaul:threaddit-v\d+:(latest)/, "callmenaul:threaddit-v${buildNumber}:latest")
                     // Ghi nội dung đã cập nhật vào file
                     writeFile file: "${DEPLOYMENT_FILE}", text: updatedContent
+                    sh 'cat ${DEPLOYMENT_FILE}'
                 }
             }
         }
